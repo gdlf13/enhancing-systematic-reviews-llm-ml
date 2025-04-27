@@ -1,6 +1,7 @@
 # Enhancing Systematic Reviews: Integrating LLM's, Prompt Engineering and Machine Learning for Scholarly Analysis
 
-[![DOI](https://zenodo.org/badge/DOI_PLACEHOLDER.svg)](https://doi.org/DOI_PLACEHOLDER)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15291559.svg)](https://doi.org/10.5281/zenodo.15291559)
+
 
 ## Project Title
 
