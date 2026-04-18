@@ -1,109 +1,111 @@
-# Enhancing Systematic Reviews: Integrating LLM's, Prompt Engineering and Machine Learning for Scholarly Analysis
+# Enhancing Systematic Reviews: LLM, Prompt Engineering & ML — R2 Reproducibility Update
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15291559.svg)](https://doi.org/10.5281/zenodo.15291559)
+**Manuscript:** RSM-2025-0110 — "Enhancing Systematic Reviews: Integrating LLM Prompt Engineering and Machine Learning Methods"
 
+**DOI:** 10.5281/zenodo.15291559
 
-## Project Title
-
-Enhancing Systematic Reviews: Integrating LLM's, Prompt Engineering and Machine Learning for Scholarly Analysis
-
-## Short Description
-
-This repository contains all data, code, prompts, and documentation necessary to ensure full transparency and reproducibility of the results described in the associated Q1 journal article. All materials are structured according to open science best practices.
-
-## Repository Structure
-
-```
-project-root/
-│   README.md
-│   LICENSE
-│   requirements.txt
-│
-├── data/
-│   ├── raw/           # Original datasets (ACM, Arxiv, IEEE, PubMed, Scopus, etc.)
-│   ├── ml_training/   # Final dataset(s) used for ML model training
-│   └── predictions/   # Outputs of model predictions (e.g., *_predictions.csv)
-├── models/            # Trained ML models (e.g., .pkl, .pt), scripts for training/evaluation
-├── prompts/           # All prompts used in the study (.md, .txt, .docx)
-├── code/              # Main scripts for analysis, data prep, model training (to be added)
-├── docs/              # Extra documentation, methodology, process notes
-```
-
-- **data/raw/**: All original, fully anonymized datasets (CSV format). No personal data included. If access is restricted, see below.
-- **data/ml_training/**: Final dataset(s) used for ML model training.
-- **data/predictions/**: Outputs of model predictions, for reproducibility and audit.
-- **models/**: Only trained ML models and training/evaluation scripts.
-- **prompts/**: All prompts used for LLMs or annotation, in markdown for transparency.
-- **code/**: Main Python scripts for analysis, data processing, and model training.
-- **docs/**: Additional documentation, methodology, or process descriptions.
-
-## Reproducing the Analysis
-
-1. Clone the repository:
-
-   ```bash
-   git clone [URL do projeto]
-   cd [nome-da-pasta]
-   ```
-
-2. Activate the conda environment:
-
-   ```bash
-   conda activate plots
-   ```
-
-3. Install dependencies:
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. Place the datasets in the correct subfolders under `data/` as described above. Place all prompts in `prompts/` as markdown files. Place trained models in `models/`.
-
-5. Run the main analysis script (to be provided in `code/`):
-
-   ```bash
-   python code/main_analysis.py
-   ```
-
-6. For full reproducibility, follow any additional instructions in `docs/` or in the script headers.
-
-## Licensing
-
-- **Code**: MIT License (see LICENSE file)
-- **Data & Documentation**: CC BY 4.0 (Creative Commons Attribution). See [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
-
-## Citation
-
-If you use this repository, please cite as:
-
-> Oliveira, M. et al. (2025). Enhancing Systematic Reviews: Integrating LLM's, Prompt Engineering and Machine Learning for Scholarly Analysis. Zenodo. https://doi.org/DOI_PLACEHOLDER
-
-## Ethics & Privacy
-
-- All datasets are fully anonymized and irreversibly de-identified.
-- No personal data is present in any shared files.
-- Any restricted datasets are documented below.
-- All scripts prioritize reproducibility and privacy compliance (GDPR, HIPAA).
-
-### Restricted Data
-
-If any dataset cannot be shared publicly, instructions for access will be provided in the data/ folder and documented here.
-
-## Zenodo DOI
-
-This repository is configured for Zenodo integration. After the first stable release (v1.0), a DOI will be minted and the badge above will be updated.
-
-## Good Practices
-
-- No file exceeds 100MB (use Git LFS if needed).
-- All file/folder names are in English and snake_case.
-- Scripts are documented and modular.
-- Reproducibility is prioritized over output storage.
-- All package installations must be done inside the `conda` environment `plots`.
-- All prompts are provided in markdown for transparency and reuse.
-- Datasets, prompts, and models are strictly separated for auditability.
+This update adds the files and scripts needed to reproduce the analyses described in the Response to Reviewer 2 (R2 revision).
 
 ---
 
-For questions or requests, open an issue or contact the corresponding author.
+## Where files go in the GitHub repo
+
+```
+enhancing-systematic-reviews-llm-ml/
+├── README.md
+├── requirements.txt                                      ← updated
+├── code/
+│   ├── 01_compute_per_database_metrics.py                ← NEW: reproduces Table S1
+│   ├── 02_inspect_model_pipeline.py                      ← NEW: verifies SMOTE pipeline
+│   └── 03_reproduce_holdout_split.py                     ← NEW: reproduces class distribution & split
+├── data/
+│   ├── ml_training/
+│   │   └── WoS_health_revised_MO.xlsx                    ← WoS training data (695 records)
+│   ├── predictions/
+│   │   ├── PubMed_predictions.xlsx                       ← NEW: MLM + Human Reviewer labels (N=146)
+│   │   ├── Scopus_predictions.xlsx                       ← NEW: MLM + Human Reviewer labels (N=422)
+│   │   ├── IEEE_predictions.xlsx                         ← NEW: MLM + Human Reviewer labels (N=1073)
+│   │   ├── ARXIV_predictions.xlsx                        ← NEW: MLM + Human Reviewer labels (N=264)
+│   │   └── ACM_predictions.xlsx                          ← NEW: MLM + Human Reviewer labels (N=1112)
+│   └── Supplementary_Table_Per_Database_Metrics.xlsx     ← NEW: Table S1
+├── models/
+│   └── my_trained_model_Mig_review_with_SMOTE.joblib     ← NEW: imblearn Pipeline (TF-IDF + SMOTE + LR)
+└── prompts/
+    ├── Appendix A.docx                                   ← All prompts (Prompts 1–10)
+    └── Appendix B.docx                                   ← Supplementary prompt materials
+```
+
+---
+
+## What This Supports (mapped to Reviewer 2 comments)
+
+### Comment 1 — Training-Evaluation Circularity
+- **Script:** `code/01_compute_per_database_metrics.py`
+- **Data:** 5 `*_predictions.xlsx` files in `data/predictions/`
+- **Output:** Supplementary Table S1 with per-database Accuracy, Precision, Recall, F1, Kappa + 95% bootstrap CIs
+- **Claim verified:** "Per-database performance metrics are reproducible from the trained model and input data available at DOI: 10.5281/zenodo.15291559"
+
+### Comment 5 — SMOTE Implementation (No Data Leakage)
+- **Script:** `code/02_inspect_model_pipeline.py`
+- **Model:** `models/my_trained_model_Mig_review_with_SMOTE.joblib`
+- **Script:** `code/03_reproduce_holdout_split.py`
+- **Data:** `data/ml_training/WoS_health_revised_MO.xlsx`
+- **Claims verified:**
+  - Pipeline is `imblearn.pipeline.Pipeline` (SMOTE bypassed during `.predict()`)
+  - Class distribution: 139 health-related (20%) vs 556 not-health-related (80%)
+  - Hold-out split: train N=625 (125 pos / 500 neg), test N=70 (14 pos / 56 neg)
+  - SMOTE (auto): generated 375 synthetic positives → balanced 500/500
+
+### Comment 6 — LLM Reproducibility
+- All prompts are documented in `prompts/Appendix A.docx` (Prompts 1–10) and `prompts/Appendix B.docx`
+- LLM input/output data are in the `*_predictions.xlsx` files (LLM column)
+
+---
+
+## How to Run
+
+```bash
+# Clone the repo
+git clone https://github.com/gdlf13/enhancing-systematic-reviews-llm-ml.git
+cd enhancing-systematic-reviews-llm-ml
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Reproduce Table S1
+python code/01_compute_per_database_metrics.py
+
+# Inspect model pipeline (SMOTE verification)
+python code/02_inspect_model_pipeline.py
+
+# Reproduce hold-out split and class distribution
+python code/03_reproduce_holdout_split.py
+```
+
+---
+
+## Data Column Descriptions
+
+### Prediction files (*_predictions.xlsx)
+| Column | Description |
+|--------|-------------|
+| Authors / Author | Article authors |
+| Title | Article title |
+| Abstract | Article abstract |
+| Year | Publication year |
+| Human Reviewer | Human screening label: "Health related" or "Not health related" |
+| LLM | GPT-4 screening label: "Health related" or "Not health related" |
+| ML Model | MLM prediction: 1 (health related) or 0 (not health related) |
+
+### Training data (WoS_health_revised_MO.xlsx)
+- Column index 4 ("Unnamed: 4" / "Mig Review"): Human Reviewer labels used for training
+- Column index 5 ("Unnamed: 5" / "GPT4 Review"): LLM labels
+
+---
+
+## Notes
+
+- The model file `my_trained_model_Mig_review_with_SMOTE.joblib` is the trained imblearn Pipeline (TF-IDF + SMOTE + Logistic Regression) as described in the manuscript.
+- The MLM was trained with scikit-learn 1.3.0 and imbalanced-learn. Loading with newer versions may produce warnings but does not affect predictions.
+- Scopus predictions contain 7 records with missing ML Model values (NaN); these are excluded from metric computation (N=422 after filtering, from 429 total).
+- The pooled metrics (Accuracy 95.9%, Kappa 0.794) are computed across the 5 non-WoS databases only. The manuscript-reported Table 1 figures (95.1%, 0.812) include WoS and are therefore not directly comparable.
